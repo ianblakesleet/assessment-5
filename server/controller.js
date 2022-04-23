@@ -252,33 +252,33 @@ module.exports = {
     sequelize
       .query(
         `
-            insert into cities (name, rating, country_id)
-            values ('${name}', ${rating}, ${countryId});
+            INSERT INTO cities (name, rating, country_id)
+            VALUES ('${name}', ${rating}, ${countryId});
       `
       )
       .then((dbRes) => res.status(200).send(dbRes[0]))
-      .catch((err) => console.log('error for creatine city', err))
+      .catch((err) => console.log('error for creating city', err))
   },
   getCities: (req, res) => {
     sequelize
       .query(
         `
-            SELECT ci.name, ci.rating, ci.country_id, co.name, co.country_id
-            FROM countries as co
-            JOIN cities as ci
+            SELECT ci.city_id, ci.name AS city, ci.rating, co.country_id, co.name AS country
+            FROM cities  ci
+            JOIN countries  co
             ON co.country_id = ci.country_id;
       `
       )
       .then((dbRes) => res.status(200).send(dbRes[0]))
   },
   deleteCity: (req, res) => {
-    const { cityId } = req.body
+    const { id } = req.params
     sequelize
       .query(
         `
         DELETE 
         FROM cities
-        where city_id = ${cityId}
+        where city_id = ${id};
       `
       )
       .then((dbRes) => res.status(200).send(dbRes[0]))
